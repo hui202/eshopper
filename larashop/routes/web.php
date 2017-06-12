@@ -117,3 +117,8 @@ Route::get('/api/v1/categories/{id?}', ['middleware' => 'auth.basic', function($
 		'status_code' => 200
 	));
 }]);
+
+Route::get('blog/{id}', [
+	'uses' => 'Front@blog_post',
+	'as' => 'single'
+]);
