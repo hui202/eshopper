@@ -10,6 +10,8 @@ use App\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Cart;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class Front extends Controller
 {
@@ -62,10 +64,6 @@ class Front extends Controller
         return view('login', array('title' => 'Welcome','description' => '','page' => 'home'));
     }
 
-    public function logout() {
-        return view('login', array('title' => 'Welcome','description' => '','page' => 'home'));
-    }
-
     public function cart() {
         //update/ add new item to cart
         if (Request::isMethod('post')) {
@@ -112,5 +110,32 @@ class Front extends Controller
 
     public function search($query) {
         return view('products', array('title' => 'Welcome','description' => '','page' => 'products'));
+    }
+
+    public function register(){
+        if (Request::isMethod('post')){
+            User::create([
+                'name' => Request::get('name'),
+                'email' => Request::get('email'),
+                'password' => bcrypt(Request::get('password'))
+            ]);
+        }
+
+        return Redirect::away('login');
+    }
+
+    public function authenticate(){
+        if (Auth::attempt(['email'=>Request::get('email'), 'password'=>Request::get('password')])){
+            return redirect()->intended('checkout');
+        }
+        else{
+            return view('login', array('title'=>'Welcome', 'description'=> '', 'page'=>'home'));
+        }
+    }
+
+    public function logout(){
+        Auth::logout();
+
+        return Redirect::away('login');
     }
 }

@@ -78,3 +78,17 @@ Route::get('/delete', function(){
 });
 
 Route::post('/cart', 'Front@cart');
+
+//Authentication routes
+Route::get('auth/login', 'Front@login');
+Route::post('auth/login', 'Front@authenticate');
+Route::get('auth/logout', 'Front@logout');
+
+//Registration routes
+Route::post('/register', 'Front@register');
+
+//Protected routes
+Route::get('/checkout', [
+	'middleware' => 'auth',
+	'uses' => 'Front@checkout'
+	]);
